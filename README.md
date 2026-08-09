@@ -1,53 +1,69 @@
-# RAG Agent Logging and Monitoring System
+# RAG Agent with Logging & Monitoring
 
 ## Overview
 
-This project enhances a Retrieval-Augmented Generation (RAG) agent by adding a logging and monitoring layer for tracking system performance, token usage, errors, and response latency.
+This project implements a Retrieval-Augmented Generation (RAG) agent with logging, monitoring, and alerting using n8n.
 
-The system records every user request and LLM response into Google Sheets and uses a separate n8n monitoring workflow to detect threshold breaches and send Slack alerts.
+The system retrieves relevant knowledge-base information, generates responses, records execution metrics, and monitors operational health.
 
 ## Features
 
-- Request and response logging
-- Token usage tracking (input, output, total tokens)
-- Response latency monitoring
-- Error logging with failure details
-- Google Sheets as logging storage
-- Automated monitoring workflow using n8n
-- Slack alerts for:
-  - Daily token usage threshold breach
-  - High error rate detection
+- RAG-based question answering
+- Knowledge-base retrieval using vector search
+- Token usage tracking
+- Response latency tracking
+- Success and error logging
+- Google Sheets logging
+- Automated monitoring workflow
+- Daily token usage alerts
+- Error-rate spike alerts
 - Alert deduplication to prevent repeated notifications
 
-## Workflow Components
+## Monitoring Thresholds
 
-### 1. RAG Agent with Logging
+- Daily token usage: **7,500 tokens**
+- Error spike window: **1 hour**
+- Error spike threshold: **5 errors**
+- Monitoring interval: **10 minutes**
 
-The RAG workflow captures:
-- User query
-- Retrieved context
-- Generated response
-- Token consumption
-- Execution status
-- Error messages
-- Response latency
-
-All records are stored in Google Sheets.
-
-### 2. Monitoring and Alerting Workflow
-
-The monitoring workflow:
-- Runs periodically using n8n Schedule Trigger
-- Reads logs from Google Sheets
-- Calculates daily token usage
-- Checks recent error occurrences
-- Sends Slack notifications when thresholds are exceeded
-
-## Tools Used
+## Technologies
 
 - n8n
+- Supabase / pgvector
 - Google Sheets
-- Slack Incoming Webhook
-- OpenAI API / LLM API
-- Python (for RAG processing)
+- OpenRouter / LLM APIs
+- Slack Webhooks
 
+## Workflows
+
+### RAG Agent
+
+Handles user queries, retrieves relevant knowledge-base content, generates responses, and records execution metrics.
+
+### RAG Monitoring & Alerts
+
+Runs periodically, analyzes logged executions, calculates token usage and recent errors, and sends Slack alerts when configured thresholds are exceeded.
+
+## Logging
+
+The logging layer records:
+
+- Timestamp
+- User Query
+- Retrieved Snippets
+- Generated Answer
+- Input Tokens
+- Output Tokens
+- Total Tokens
+- Status
+- Error Message
+- Response Latency
+
+## Alerting
+
+The monitoring workflow sends alerts when:
+
+- Daily token usage exceeds 7,500 tokens.
+- At least 5 errors occur within the last hour.
+
+Alert deduplication prevents repeated token alerts during the same day and repeated error alerts while the same error spike remains active.
